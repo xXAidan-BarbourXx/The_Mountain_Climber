@@ -66,4 +66,12 @@ public class GameManager : MonoBehaviour
         ScoreMultiplier = 1f;
         IsGameOver = false;
     }
+
+    public void TriggerGameOver()
+    {
+        if (IsGameOver) return; // prevent double trigger
+        IsGameOver = true;
+        OnGameOver?.Invoke();
+    }
+
 }

@@ -11,16 +11,16 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private TextMeshProUGUI finalScoreText;
 
-    private void Start()
+    private void Awake()
     {
-        // Ensure Game Over panel is hidden at the beginning
         if (gameOverPanel != null)
             gameOverPanel.SetActive(false);
+    }
 
+    private void Start()
+    {
         if (GameManager.Instance != null)
-        {
             GameManager.Instance.OnGameOver += ShowGameOverScreen;
-        }
     }
 
     private void OnDestroy()

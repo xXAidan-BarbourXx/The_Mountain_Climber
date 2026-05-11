@@ -7,7 +7,7 @@ public enum PowerUpType
     ScoreMultiplier
 }
 
-public class NewMonoBehaviourScript : MonoBehaviour
+public class PowerUp : MonoBehaviour
 {
     [Header("Power-Up Settings")]
     public PowerUpType type;

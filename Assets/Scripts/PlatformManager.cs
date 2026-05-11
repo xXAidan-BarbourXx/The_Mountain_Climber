@@ -19,12 +19,12 @@ public class PlatformManager : MonoBehaviour
         foreach (var p in initialPlatforms)
             activePlatforms.AddLast(p);
 
-        /*for (int i = 1; i < initialPlatforms.Length; i++)
+        for (int i = 1; i < initialPlatforms.Length; i++)
         {
             ObstacleSpawner spawner = initialPlatforms[i].GetComponent<ObstacleSpawner>();
             if (spawner != null)
                 spawner.SpawnObstacles();
-        }*/
+        }
     }
 
 
@@ -56,9 +56,9 @@ public class PlatformManager : MonoBehaviour
 
         newPlatform.name = "PlatformRunner";
 
-        /*ObstacleSpawner spawner = newPlatform.GetComponent<ObstacleSpawner>();
+        ObstacleSpawner spawner = newPlatform.GetComponent<ObstacleSpawner>();
         if (spawner != null)
-            spawner.SpawnObstacles();*/
+            spawner.SpawnObstacles();
 
         activePlatforms.AddLast(newPlatform);
     }

@@ -360,9 +360,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64181958f0f17f2429b246ff90b7b5d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
-  scoreText: {fileID: 0}
-  gameOverPanel: {fileID: 0}
-  finalScoreText: {fileID: 0}
+  scoreText: {fileID: 1944489244}
+  gameOverPanel: {fileID: 1489995090}
+  finalScoreText: {fileID: 1944489244}
 --- !u!4 &323560726
 Transform:
   m_ObjectHideFlags: 0
@@ -493,7 +493,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -353}
+  m_AnchoredPosition: {x: 0, y: 59}
   m_SizeDelta: {x: 500, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &452340042
@@ -825,13 +825,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1412979444}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.17013763, y: -0, z: -0, w: 0.98542035}
-  m_LocalPosition: {x: -0.35355, y: -13.3, z: -35.8}
+  m_LocalRotation: {x: -0.55586237, y: -0, z: -0, w: 0.83127433}
+  m_LocalPosition: {x: 0, y: -8.9, z: -9.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2003819324}
-  m_LocalEulerAnglesHint: {x: -19.592, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -67.54, y: 0, z: 0}
 --- !u!114 &1412979446
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1429,6 +1429,9 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
+  deathPauseDuration: 1
+  crouchDuration: 1
+  crouchYOffset: 0.5
 --- !u!54 &2003819320
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1545,7 +1548,7 @@ Transform:
   m_GameObject: {fileID: 2003819318}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 1.1, z: -13.7}
+  m_LocalPosition: {x: 0, y: 1, z: -13.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

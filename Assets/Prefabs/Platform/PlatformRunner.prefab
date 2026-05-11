@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 1029315862675807106}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.473, z: 4.73}
+  m_LocalPosition: {x: 0, y: -0.473, z: 4.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -61,7 +61,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -3.9908}
-  m_LocalScale: {x: 9, y: 1, z: 78.375}
+  m_LocalScale: {x: 9, y: 1, z: 78}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3420044320086677025}
@@ -161,13 +161,15 @@ MonoBehaviour:
   jumpObsPrefab: {fileID: 6072938864621587903, guid: 526c71b07b466354883f04bc4271b9ee, type: 3}
   duckObsPrefab: {fileID: 337989251600425700, guid: bc732b7f08bbf20419bb537efbceb620, type: 3}
   dodgeObsPrefab: {fileID: 8055285460051281046, guid: 21e85c50eee07c54c99666520b6489a4, type: 3}
+  higherJumpPrefab: {fileID: 4183823287642379481, guid: 7e542c557a001bd4ebae923bdb06249e, type: 3}
+  invulnerabilityPrefab: {fileID: 4183823287642379481, guid: 14ea6f3b30a46c141b537e87b86df3f2, type: 3}
+  scoreMultiplierPrefab: {fileID: 4183823287642379481, guid: 30a0347dc782e32468ec175d6e9c763d, type: 3}
+  spawnHeightOffset: 1
   laneXPositions:
   - -3
   - 0
   - 3
-  zOffsets:
-  - -0.2
-  - 0.2
+  powerUpSpawnChance: 0.3
 --- !u!1 &3882184302770759525
 GameObject:
   m_ObjectHideFlags: 0
