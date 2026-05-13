@@ -16,7 +16,6 @@ public class PlayerController : MonoBehaviour
 
     [Header("Speed Acceleration")]
     [SerializeField] private float accelerationRate = 0.1f;
-    [SerializeField] private float maxForwardSpeed = 20f;
 
     [Header("Ground Check")]
     [SerializeField] private Transform groundCheck;
@@ -186,7 +185,7 @@ public class PlayerController : MonoBehaviour
         isGrounded = Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundLayer);
 
         // Acceleration always builds regardless of jump state
-        baseForwardSpeed = Mathf.Min(baseForwardSpeed + accelerationRate * Time.fixedDeltaTime, maxForwardSpeed);
+        baseForwardSpeed += accelerationRate * Time.fixedDeltaTime;
 
         // Lane slide speed scales with base speed
         float scaledLaneSlideSpeed = laneSlideSpeed * (baseForwardSpeed / forwardSpeed);

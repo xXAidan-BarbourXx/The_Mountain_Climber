@@ -892,9 +892,6 @@ MonoBehaviour:
   player: {fileID: 2003819324}
   zOffset: -5
   xFollowSpeed: 10
-  deathSlideDelay: 0.5
-  deathSlideDuration: 1
-  deathSlideDistance: 10
 --- !u!1 &1489995090
 GameObject:
   m_ObjectHideFlags: 0
@@ -1380,15 +1377,15 @@ MonoBehaviour:
   forwardSpeed: 5
   laneSlideSpeed: 10
   jumpForwardSpeedMalt: 1.25
-  accelerationRate: 0.25
-  maxForwardSpeed: 20
+  accelerationRate: 0.05
   groundCheck: {fileID: 1058330128}
   groundCheckRadius: 0.2
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
   deathPauseDuration: 1
-  crouchDuration: 1
+  deathFallForce: 15
+  crouchDuration: 0.5
   crouchYOffset: 0.5
   airCrouchDropForce: 20
 --- !u!54 &2003819320
