@@ -1376,7 +1376,7 @@ MonoBehaviour:
   jumpSpeed: 10
   forwardSpeed: 5
   laneSlideSpeed: 10
-  jumpForwardSpeedMalt: 1.25
+  jumpForwardSpeedMalt: 1.75
   accelerationRate: 0.05
   groundCheck: {fileID: 1058330128}
   groundCheckRadius: 0.2
@@ -1385,7 +1385,7 @@ MonoBehaviour:
     m_Bits: 64
   deathPauseDuration: 1
   deathFallForce: 15
-  crouchDuration: 0.5
+  crouchDuration: 0.75
   crouchYOffset: 0.5
   airCrouchDropForce: 20
 --- !u!54 &2003819320
