@@ -1373,7 +1373,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   speed: 5
-  jumpSpeed: 11
+  jumpSpeed: 10
   forwardSpeed: 5
   laneSlideSpeed: 10
   jumpForwardSpeedMalt: 1.75
