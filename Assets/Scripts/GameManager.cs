@@ -44,15 +44,14 @@ public class GameManager : MonoBehaviour
     {
         float original = ScoreMultiplier;
         ScoreMultiplier = multiplier;
-        yield return new WaitForSeconds(duration);
-        ScoreMultiplier = original;
-    }
 
-    public void PlayerDied()
-    {
-        if (IsGameOver) return;
-        IsGameOver = true;
-        OnGameOver?.Invoke();
+        Debug.Log("ScoreMultiplier STARTED");
+
+        yield return new WaitForSeconds(duration);
+
+        ScoreMultiplier = original;
+
+        Debug.Log("ScoreMultiplier ENDED");
     }
 
     public void RestartGame()
@@ -69,7 +68,7 @@ public class GameManager : MonoBehaviour
 
     public void TriggerGameOver()
     {
-        if (IsGameOver) return; // prevent double trigger
+        if (IsGameOver) return;
         IsGameOver = true;
         OnGameOver?.Invoke();
     }

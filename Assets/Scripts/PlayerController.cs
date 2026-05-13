@@ -32,6 +32,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float crouchYOffset = 0.5f;
     [SerializeField] private float airCrouchDropForce = 20f;
 
+    [Header("Power-Up State")]
+    private bool isInvulnerable = false;
+    private Coroutine higherJumpCoroutine;
+    private Coroutine invulnerabilityCoroutine;
+
     private Rigidbody rb;
     private InputAction moveAction;
     private bool isGrounded;
@@ -92,7 +97,6 @@ public class PlayerController : MonoBehaviour
     {
         if (!isGrounded || isDead) return;
 
-        // If crouching while grounded, cancel crouch instead of jumping
         if (isCrouching)
         {
             CancelCrouch();
@@ -124,14 +128,12 @@ public class PlayerController : MonoBehaviour
     {
         if (isDead) return;
 
-        // Crouching in the air drops you to the ground
         if (!isGrounded)
         {
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, -airCrouchDropForce, rb.linearVelocity.z);
             return;
         }
 
-        // Crouching while already crouching cancels it
         if (isCrouching)
         {
             CancelCrouch();
@@ -179,15 +181,63 @@ public class PlayerController : MonoBehaviour
         CancelCrouch();
     }
 
+    // --- Power-Up Methods ---
+
+    public void ApplyHigherJump(float duration, float multiplier)
+    {
+        if (higherJumpCoroutine != null)
+            StopCoroutine(higherJumpCoroutine);
+        higherJumpCoroutine = StartCoroutine(HigherJumpSequence(duration, multiplier));
+    }
+
+    public void ApplyInvulnerability(float duration)
+    {
+        if (invulnerabilityCoroutine != null)
+            StopCoroutine(invulnerabilityCoroutine);
+        invulnerabilityCoroutine = StartCoroutine(InvulnerabilitySequence(duration));
+    }
+
+    private IEnumerator HigherJumpSequence(float duration, float multiplier)
+    {
+        float originalJumpSpeed = jumpSpeed;
+        float originalJumpMalt = jumpForwardSpeedMalt;
+
+        jumpSpeed *= multiplier;
+        jumpForwardSpeedMalt *= multiplier;
+
+        Debug.Log("HigherJump STARTED");
+
+        yield return new WaitForSeconds(duration);
+
+        jumpSpeed = originalJumpSpeed;
+        jumpForwardSpeedMalt = originalJumpMalt;
+        higherJumpCoroutine = null;
+
+        Debug.Log("HigherJump ENDED");
+    }
+
+
+    private IEnumerator InvulnerabilitySequence(float duration)
+    {
+        isInvulnerable = true;
+        Debug.Log("Invulnerability STARTED");
+
+        yield return new WaitForSeconds(duration);
+
+        isInvulnerable = false;
+        invulnerabilityCoroutine = null;
+
+        Debug.Log("Invulnerability ENDED");
+    }
+
+
     private void FixedUpdate()
     {
         if (isDead) return;
         isGrounded = Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundLayer);
 
-        // Acceleration always builds regardless of jump state
         baseForwardSpeed += accelerationRate * Time.fixedDeltaTime;
 
-        // Lane slide speed scales with base speed
         float scaledLaneSlideSpeed = laneSlideSpeed * (baseForwardSpeed / forwardSpeed);
 
         if (!isGrounded)
@@ -216,6 +266,12 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Obstacle") && !isDead)
         {
+            if (isInvulnerable)
+            {
+                Destroy(collision.gameObject);
+                return;
+            }
+
             isDead = true;
             playerInput.Disable();
             StartCoroutine(DeathSequence());
@@ -226,7 +282,7 @@ public class PlayerController : MonoBehaviour
     {
         rb.linearVelocity = new Vector3(0f, 0f, 0f);
         rb.angularVelocity = Vector3.zero;
-        rb.isKinematic = false; // ensure physics still runs
+        rb.isKinematic = false;
 
         CameraController cam = Camera.main.GetComponent<CameraController>();
         if (cam != null)
@@ -241,7 +297,6 @@ public class PlayerController : MonoBehaviour
         GameManager.Instance.TriggerGameOver();
     }
 
-
     private void Update()
     {
         if (!isDead) return;
@@ -252,8 +307,6 @@ public class PlayerController : MonoBehaviour
         }
         rb.AddForce(new Vector3(0f, 0f, -deathFallForce), ForceMode.Acceleration);
     }
-
-
 
     private void OnDrawGizmosSelected()
     {
