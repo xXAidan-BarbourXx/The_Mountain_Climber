@@ -30,8 +30,7 @@ public class PowerUp : MonoBehaviour
 
             case PowerUpType.Invulnerability:
                 player.ApplyInvulnerability(duration);
-                DestroyAllObstacles();
-                break;
+                break; // no obstacle destruction on pickup anymore
 
             case PowerUpType.ScoreMultiplier:
                 GameManager.Instance.ActivateScoreMultiplier(duration, scoreMultiplier);
@@ -39,12 +38,5 @@ public class PowerUp : MonoBehaviour
         }
 
         Destroy(gameObject);
-    }
-
-    private void DestroyAllObstacles()
-    {
-        GameObject[] obstacles = GameObject.FindGameObjectsWithTag("Obstacle");
-        foreach (GameObject obstacle in obstacles)
-            Destroy(obstacle);
     }
 }

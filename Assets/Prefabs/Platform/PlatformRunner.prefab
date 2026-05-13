@@ -173,8 +173,8 @@ MonoBehaviour:
   centerZOffset: 0
   farZOffset: -20
   powerUpSpawnChance: 0.3
-  twoLaneBlockChance: 0.4
-  threeLaneBlockChance: 0
+  twoLaneBlockChance: 0.3
+  threeLaneBlockChance: 0.3
   enableMultiLaneBlocking: 1
 --- !u!1 &3882184302770759525
 GameObject:

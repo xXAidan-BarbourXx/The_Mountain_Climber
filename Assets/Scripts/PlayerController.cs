@@ -13,6 +13,8 @@ public class PlayerController : MonoBehaviour
     [Header("Jump Speed Boost")]
     [SerializeField] private float jumpForwardSpeedMalt = 1.25f;
     private float baseForwardSpeed;
+    private float baseJumpSpeed;
+    private float baseJumpMalt;
 
     [Header("Speed Acceleration")]
     [SerializeField] private float accelerationRate = 0.1f;
@@ -36,6 +38,8 @@ public class PlayerController : MonoBehaviour
     private bool isInvulnerable = false;
     private Coroutine higherJumpCoroutine;
     private Coroutine invulnerabilityCoroutine;
+    private float remainingJumpTime;
+    private float remainingInvulnerabilityTime;
 
     private Rigidbody rb;
     private InputAction moveAction;
@@ -61,6 +65,8 @@ public class PlayerController : MonoBehaviour
 
         originalScale = transform.localScale;
         baseForwardSpeed = forwardSpeed;
+        baseJumpSpeed = jumpSpeed;
+        baseJumpMalt = jumpForwardSpeedMalt;
 
         capsuleCollider = GetComponent<CapsuleCollider>();
         if (capsuleCollider != null)
@@ -186,36 +192,49 @@ public class PlayerController : MonoBehaviour
     public void ApplyHigherJump(float duration, float multiplier)
     {
         if (higherJumpCoroutine != null)
+        {
             StopCoroutine(higherJumpCoroutine);
-        higherJumpCoroutine = StartCoroutine(HigherJumpSequence(duration, multiplier));
+            remainingJumpTime += duration; // extend duration, don't stack multiplier
+        }
+        else
+        {
+            remainingJumpTime = duration;
+        }
+
+        higherJumpCoroutine = StartCoroutine(HigherJumpSequence(remainingJumpTime, multiplier));
     }
 
     public void ApplyInvulnerability(float duration)
     {
         if (invulnerabilityCoroutine != null)
+        {
             StopCoroutine(invulnerabilityCoroutine);
-        invulnerabilityCoroutine = StartCoroutine(InvulnerabilitySequence(duration));
+            remainingInvulnerabilityTime += duration; // extend duration
+        }
+        else
+        {
+            remainingInvulnerabilityTime = duration;
+        }
+
+        invulnerabilityCoroutine = StartCoroutine(InvulnerabilitySequence(remainingInvulnerabilityTime));
     }
 
     private IEnumerator HigherJumpSequence(float duration, float multiplier)
     {
-        float originalJumpSpeed = jumpSpeed;
-        float originalJumpMalt = jumpForwardSpeedMalt;
-
-        jumpSpeed *= multiplier;
-        jumpForwardSpeedMalt *= multiplier;
+        // Always apply from base values so multiplier never stacks
+        jumpSpeed = baseJumpSpeed * multiplier;
+        jumpForwardSpeedMalt = baseJumpMalt * multiplier;
 
         Debug.Log("HigherJump STARTED");
 
         yield return new WaitForSeconds(duration);
 
-        jumpSpeed = originalJumpSpeed;
-        jumpForwardSpeedMalt = originalJumpMalt;
+        jumpSpeed = baseJumpSpeed;
+        jumpForwardSpeedMalt = baseJumpMalt;
         higherJumpCoroutine = null;
 
         Debug.Log("HigherJump ENDED");
     }
-
 
     private IEnumerator InvulnerabilitySequence(float duration)
     {
@@ -227,9 +246,10 @@ public class PlayerController : MonoBehaviour
         isInvulnerable = false;
         invulnerabilityCoroutine = null;
 
-        Debug.Log("Invulnerability ENDED");
+        Debug.Log("Invulnerability ENDED - duration expired");
     }
 
+    // --- Core Loop ---
 
     private void FixedUpdate()
     {
@@ -268,7 +288,18 @@ public class PlayerController : MonoBehaviour
         {
             if (isInvulnerable)
             {
-                Destroy(collision.gameObject);
+                // Destroy all obstacles then end invulnerability immediately
+                GameObject[] obstacles = GameObject.FindGameObjectsWithTag("Obstacle");
+                foreach (GameObject obstacle in obstacles)
+                    Destroy(obstacle);
+
+                if (invulnerabilityCoroutine != null)
+                    StopCoroutine(invulnerabilityCoroutine);
+
+                isInvulnerable = false;
+                invulnerabilityCoroutine = null;
+
+                Debug.Log("Invulnerability ENDED - obstacle hit, all obstacles cleared");
                 return;
             }
 
