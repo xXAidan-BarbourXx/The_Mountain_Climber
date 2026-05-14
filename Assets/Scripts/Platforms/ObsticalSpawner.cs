@@ -7,13 +7,15 @@ public class ObstacleSpawner : MonoBehaviour
     public GameObject jumpObsPrefab;
     public GameObject duckObsPrefab;
     public GameObject dodgeObsPrefab;
+    public GameObject fallObsPrefab;
 
     [Header("Power-Up Prefabs")]
     public GameObject higherJumpPrefab;
     public GameObject invulnerabilityPrefab;
     public GameObject scoreMultiplierPrefab;
-    public GameObject launchPrefab;         // NEW — Launch power-up
-    public GameObject oxygenRefillPrefab;   // NEW — Oxygen refill (instant)
+    public GameObject launchPrefab;
+    public GameObject oxygenRefillPrefab;
+
 
     [Header("Spawn Settings")]
     public float spawnHeightOffset = 1f;
@@ -24,7 +26,6 @@ public class ObstacleSpawner : MonoBehaviour
 
     [Header("Spawn Chances")]
     [Range(0f, 1f)] public float powerUpSpawnChance = 0.3f;
-
     [Range(0f, 1f)] public float twoLaneBlockChance = 0.4f;
     [Range(0f, 1f)] public float threeLaneBlockChance = 0.15f;
     public bool enableMultiLaneBlocking = true;
@@ -37,6 +38,13 @@ public class ObstacleSpawner : MonoBehaviour
         SpawnZone(nearZOffset);
         SpawnZone(centerZOffset);
         SpawnZone(farZOffset);
+    }
+
+    public void SpawnBossObstacles()
+    {
+        SpawnPowerUpOnlyZone(nearZOffset);
+        SpawnPowerUpOnlyZone(centerZOffset);
+        SpawnPowerUpOnlyZone(farZOffset);
     }
 
     float GetObstacleHeightOffset(GameObject prefab)
@@ -82,27 +90,37 @@ public class ObstacleSpawner : MonoBehaviour
                     transform.position.y + GetObstacleHeightOffset(prefab),
                     transform.position.z + zOffset
                 );
-
                 GameObject obs = Instantiate(prefab, pos, Quaternion.identity);
                 obs.transform.SetParent(transform, worldPositionStays: true);
             }
         }
 
         if (Random.value <= powerUpSpawnChance && availableLanes.Count > 0)
-        {
-            int powerUpLane = availableLanes[Random.Range(0, availableLanes.Count)];
-            Vector3 powerUpPos = new Vector3(
-                laneXPositions[powerUpLane],
-                transform.position.y + spawnHeightOffset,
-                transform.position.z + zOffset
-            );
+            SpawnPowerUpInLanes(availableLanes, zOffset);
+    }
 
-            GameObject powerUpPrefab = GetRandomPowerUpPrefab();
-            if (powerUpPrefab != null)
-            {
-                GameObject pu = Instantiate(powerUpPrefab, powerUpPos, Quaternion.identity);
-                pu.transform.SetParent(transform, worldPositionStays: true);
-            }
+    void SpawnPowerUpOnlyZone(float zOffset)
+    {
+        List<int> allLanes = new List<int> { 0, 1, 2 };
+
+        if (Random.value <= powerUpSpawnChance)
+            SpawnPowerUpInLanes(allLanes, zOffset);
+    }
+
+    void SpawnPowerUpInLanes(List<int> availableLanes, float zOffset)
+    {
+        int powerUpLane = availableLanes[Random.Range(0, availableLanes.Count)];
+        Vector3 powerUpPos = new Vector3(
+            laneXPositions[powerUpLane],
+            transform.position.y + spawnHeightOffset,
+            transform.position.z + zOffset
+        );
+
+        GameObject powerUpPrefab = GetRandomPowerUpPrefab();
+        if (powerUpPrefab != null)
+        {
+            GameObject pu = Instantiate(powerUpPrefab, powerUpPos, Quaternion.identity);
+            pu.transform.SetParent(transform, worldPositionStays: true);
         }
     }
 
@@ -125,7 +143,6 @@ public class ObstacleSpawner : MonoBehaviour
 
     GameObject GetRandomPowerUpPrefab()
     {
-        // Build a pool of non-null prefabs so unassigned slots don't break spawning
         List<GameObject> pool = new List<GameObject>();
 
         if (higherJumpPrefab != null) pool.Add(higherJumpPrefab);

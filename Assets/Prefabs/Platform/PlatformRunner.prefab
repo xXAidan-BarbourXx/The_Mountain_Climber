@@ -166,6 +166,7 @@ MonoBehaviour:
   scoreMultiplierPrefab: {fileID: 4183823287642379481, guid: 30a0347dc782e32468ec175d6e9c763d, type: 3}
   launchPrefab: {fileID: 4183823287642379481, guid: 33a9840ee66a3a84ca958b5c98a6d66c, type: 3}
   oxygenRefillPrefab: {fileID: 4183823287642379481, guid: 1e5862dbcd0e2de4f9fbc0abb41efca6, type: 3}
+  fallObsPrefab: {fileID: 6072938864621587903, guid: 340ec6fa217c9b740b84dabbe5e7cc92, type: 3}
   spawnHeightOffset: 1
   laneXPositions:
   - -3

@@ -5,12 +5,14 @@ using System.Collections;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
-
     public float Score { get; private set; }
     public float ScoreMultiplier { get; private set; } = 1f;
     public bool IsGameOver { get; private set; }
-
     public event System.Action OnGameOver;
+    public event System.Action OnBossThreshold;
+    public event System.Action OnBossDefeated;
+    private bool bossThresholdFired = false;
+    private const float BossScoreThreshold = 100f;
 
     private void Awake()
     {
@@ -29,29 +31,21 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (!IsGameOver)
+        if (IsGameOver) return;
+        Score += Time.deltaTime * ScoreMultiplier;
+
+        if (!bossThresholdFired && Score >= BossScoreThreshold)
         {
-            Score += Time.deltaTime * ScoreMultiplier;
+            bossThresholdFired = true;
+            Debug.Log("[GameManager] Boss threshold reached! Firing OnBossThreshold event.");
+            Debug.Log($"[GameManager] OnBossThreshold has {(OnBossThreshold == null ? 0 : OnBossThreshold.GetInvocationList().Length)} listeners.");
+            OnBossThreshold?.Invoke();
         }
     }
 
     public void ActivateScoreMultiplier(float duration, float multiplier)
     {
         StartCoroutine(ApplyScoreMultiplier(duration, multiplier));
-    }
-
-    private IEnumerator ApplyScoreMultiplier(float duration, float multiplier)
-    {
-        float original = ScoreMultiplier;
-        ScoreMultiplier = multiplier;
-
-        Debug.Log("ScoreMultiplier STARTED");
-
-        yield return new WaitForSeconds(duration);
-
-        ScoreMultiplier = original;
-
-        Debug.Log("ScoreMultiplier ENDED");
     }
 
     public void RestartGame()
@@ -64,6 +58,7 @@ public class GameManager : MonoBehaviour
         Score = 0f;
         ScoreMultiplier = 1f;
         IsGameOver = false;
+        bossThresholdFired = false;
     }
 
     public void TriggerGameOver()
@@ -73,4 +68,18 @@ public class GameManager : MonoBehaviour
         OnGameOver?.Invoke();
     }
 
+    public void NotifyBossDefeated()
+    {
+        OnBossDefeated?.Invoke();
+    }
+
+    private IEnumerator ApplyScoreMultiplier(float duration, float multiplier)
+    {
+        float original = ScoreMultiplier;
+        ScoreMultiplier = multiplier;
+        Debug.Log("ScoreMultiplier STARTED");
+        yield return new WaitForSeconds(duration);
+        ScoreMultiplier = original;
+        Debug.Log("ScoreMultiplier ENDED");
+    }
 }

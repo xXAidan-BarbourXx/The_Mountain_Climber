@@ -5,15 +5,14 @@ public enum PowerUpType
     HigherJump,
     Invulnerability,
     ScoreMultiplier,
-    Launch,          // Slot 3 — stored in inventory, activated on key press
-    OxygenRefill     // Instant — never stored, applied immediately on pickup
+    Launch,
+    OxygenRefill
 }
 
 public class PowerUp : MonoBehaviour
 {
     [Header("Power-Up Settings")]
     public PowerUpType type;
-
     public float duration = 5f;
     public float jumpMultiplier = 1.5f;
     public float scoreMultiplier = 2f;
@@ -25,27 +24,34 @@ public class PowerUp : MonoBehaviour
 
     [Header("Oxygen Refill Settings")]
     [Range(0f, 1f)]
-    public float oxygenRefillPercent = 0.15f;   // 15% of max HP by default
+    public float oxygenRefillPercent = 0.15f;
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.CompareTag("Boss"))
+        {
+            BossController boss = other.GetComponent<BossController>();
+            if (boss != null)
+                boss.OnPowerUpAbsorbed();
+
+            Destroy(gameObject);
+            return;
+        }
+
         if (!other.CompareTag("Player")) return;
 
         if (type == PowerUpType.OxygenRefill)
         {
-            // Instant apply — never enters inventory
             PlayerHealth health = other.GetComponent<PlayerHealth>();
             if (health != null)
             {
                 float refillAmount = health.MaxHP * oxygenRefillPercent;
                 health.RefillHP(refillAmount);
             }
-
             Destroy(gameObject);
             return;
         }
 
-        // All other types go into the inventory
         if (InventoryManager.Instance != null)
             InventoryManager.Instance.AddToSlot(type);
 
