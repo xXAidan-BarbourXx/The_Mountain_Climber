@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 1029315862675807106}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.4025, z: 180.4}
+  m_LocalPosition: {x: 0, y: -0.228, z: 199.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -60,7 +60,7 @@ Transform:
   m_GameObject: {fileID: 3522748738960144463}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 37}
+  m_LocalPosition: {x: 0, y: 0, z: 39.1}
   m_LocalScale: {x: 9, y: 1, z: 78}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -164,6 +164,8 @@ MonoBehaviour:
   higherJumpPrefab: {fileID: 4183823287642379481, guid: 7e542c557a001bd4ebae923bdb06249e, type: 3}
   invulnerabilityPrefab: {fileID: 4183823287642379481, guid: 14ea6f3b30a46c141b537e87b86df3f2, type: 3}
   scoreMultiplierPrefab: {fileID: 4183823287642379481, guid: 30a0347dc782e32468ec175d6e9c763d, type: 3}
+  launchPrefab: {fileID: 4183823287642379481, guid: 33a9840ee66a3a84ca958b5c98a6d66c, type: 3}
+  oxygenRefillPrefab: {fileID: 4183823287642379481, guid: 1e5862dbcd0e2de4f9fbc0abb41efca6, type: 3}
   spawnHeightOffset: 1
   laneXPositions:
   - -3
@@ -172,7 +174,7 @@ MonoBehaviour:
   nearZOffset: 20
   centerZOffset: 0
   farZOffset: -20
-  powerUpSpawnChance: 0.3
+  powerUpSpawnChance: 0.4
   twoLaneBlockChance: 0.3
   threeLaneBlockChance: 0.3
   enableMultiLaneBlocking: 1
@@ -191,7 +193,7 @@ GameObject:
   - component: {fileID: 5337092786246766530}
   m_Layer: 0
   m_Name: PlatformDestroyer
-  m_TagString: Untagged
+  m_TagString: Trigger
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -316,7 +318,7 @@ GameObject:
   - component: {fileID: 630125807664644639}
   m_Layer: 0
   m_Name: PlatformGenerator
-  m_TagString: Untagged
+  m_TagString: Trigger
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -331,7 +333,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 5, z: -0.449}
-  m_LocalScale: {x: 0.913889, y: 12.420409, z: 0.011666667}
+  m_LocalScale: {x: 0.913889, y: 21.890972, z: 0.011666667}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7612736234143433269}

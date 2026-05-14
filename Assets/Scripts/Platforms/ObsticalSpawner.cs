@@ -12,6 +12,8 @@ public class ObstacleSpawner : MonoBehaviour
     public GameObject higherJumpPrefab;
     public GameObject invulnerabilityPrefab;
     public GameObject scoreMultiplierPrefab;
+    public GameObject launchPrefab;         // NEW — Launch power-up
+    public GameObject oxygenRefillPrefab;   // NEW — Oxygen refill (instant)
 
     [Header("Spawn Settings")]
     public float spawnHeightOffset = 1f;
@@ -23,11 +25,10 @@ public class ObstacleSpawner : MonoBehaviour
     [Header("Spawn Chances")]
     [Range(0f, 1f)] public float powerUpSpawnChance = 0.3f;
 
-    [Range(0f, 1f)] public float twoLaneBlockChance = 0.4f;  // chance 2 lanes are blocked
-    [Range(0f, 1f)] public float threeLaneBlockChance = 0.15f; // chance all 3 lanes blocked (1 must be dodge)
+    [Range(0f, 1f)] public float twoLaneBlockChance = 0.4f;
+    [Range(0f, 1f)] public float threeLaneBlockChance = 0.15f;
     public bool enableMultiLaneBlocking = true;
 
-    // Tracks obstacle types spawned per zone to cap dodge count
     private int dodgeCountThisSpawn = 0;
 
     public void SpawnObstacles()
@@ -43,17 +44,15 @@ public class ObstacleSpawner : MonoBehaviour
         if (prefab == dodgeObsPrefab) return 1f;
         if (prefab == duckObsPrefab) return 2f;
         if (prefab == jumpObsPrefab) return 0.2f;
-        return spawnHeightOffset; // fallback
+        return spawnHeightOffset;
     }
-
 
     void SpawnZone(float zOffset)
     {
         List<int> availableLanes = new List<int> { 0, 1, 2 };
         List<int> obstacleLanes = new List<int>();
 
-        // --- Determine how many lanes to block ---
-        int lanesToBlock = 1; // default: always at least 1 obstacle
+        int lanesToBlock = 1;
 
         if (enableMultiLaneBlocking)
         {
@@ -64,18 +63,15 @@ public class ObstacleSpawner : MonoBehaviour
                 lanesToBlock = 2;
         }
 
-        // --- Pick obstacle lanes ---
         List<int> shuffled = new List<int>(availableLanes);
         ShuffleList(shuffled);
 
         for (int i = 0; i < lanesToBlock; i++)
             obstacleLanes.Add(shuffled[i]);
 
-        // Remove obstacle lanes from available so power-ups never overlap
         foreach (int lane in obstacleLanes)
             availableLanes.Remove(lane);
 
-        // --- Spawn obstacles ---
         foreach (int lane in obstacleLanes)
         {
             GameObject prefab = GetObstaclePrefab();
@@ -92,8 +88,6 @@ public class ObstacleSpawner : MonoBehaviour
             }
         }
 
-
-        // --- Spawn power-up in a remaining lane ---
         if (Random.value <= powerUpSpawnChance && availableLanes.Count > 0)
         {
             int powerUpLane = availableLanes[Random.Range(0, availableLanes.Count)];
@@ -114,13 +108,11 @@ public class ObstacleSpawner : MonoBehaviour
 
     GameObject GetObstaclePrefab()
     {
-        // Cap dodge obstacles at 2 per spawn cycle so there's always an escape
         List<int> options = new List<int> { 0, 1, 2 };
         if (dodgeCountThisSpawn >= 2)
-            options.Remove(2); // remove dodge from pool
+            options.Remove(2);
 
         int roll = options[Random.Range(0, options.Count)];
-
         if (roll == 2) dodgeCountThisSpawn++;
 
         return roll switch
@@ -133,13 +125,17 @@ public class ObstacleSpawner : MonoBehaviour
 
     GameObject GetRandomPowerUpPrefab()
     {
-        int roll = Random.Range(0, 3);
-        return roll switch
-        {
-            0 => higherJumpPrefab,
-            1 => invulnerabilityPrefab,
-            _ => scoreMultiplierPrefab,
-        };
+        // Build a pool of non-null prefabs so unassigned slots don't break spawning
+        List<GameObject> pool = new List<GameObject>();
+
+        if (higherJumpPrefab != null) pool.Add(higherJumpPrefab);
+        if (invulnerabilityPrefab != null) pool.Add(invulnerabilityPrefab);
+        if (scoreMultiplierPrefab != null) pool.Add(scoreMultiplierPrefab);
+        if (launchPrefab != null) pool.Add(launchPrefab);
+        if (oxygenRefillPrefab != null) pool.Add(oxygenRefillPrefab);
+
+        if (pool.Count == 0) return null;
+        return pool[Random.Range(0, pool.Count)];
     }
 
     void ShuffleList(List<int> list)

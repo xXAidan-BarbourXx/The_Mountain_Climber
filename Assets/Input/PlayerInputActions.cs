@@ -199,6 +199,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""UseSlot4"",
+                    ""type"": ""Button"",
+                    ""id"": ""9b5637eb-0f40-4fe0-a1da-b38b4113e9d1"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -617,6 +626,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""UseSlot3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0582ee73-f7fe-4671-8df2-6c6914d0d0c3"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""UseSlot4"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1216,6 +1236,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_UseSlot1 = m_Player.FindAction("UseSlot1", throwIfNotFound: true);
         m_Player_UseSlot2 = m_Player.FindAction("UseSlot2", throwIfNotFound: true);
         m_Player_UseSlot3 = m_Player.FindAction("UseSlot3", throwIfNotFound: true);
+        m_Player_UseSlot4 = m_Player.FindAction("UseSlot4", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1321,6 +1342,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_UseSlot1;
     private readonly InputAction m_Player_UseSlot2;
     private readonly InputAction m_Player_UseSlot3;
+    private readonly InputAction m_Player_UseSlot4;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -1380,6 +1402,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/UseSlot3".
         /// </summary>
         public InputAction @UseSlot3 => m_Wrapper.m_Player_UseSlot3;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/UseSlot4".
+        /// </summary>
+        public InputAction @UseSlot4 => m_Wrapper.m_Player_UseSlot4;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1442,6 +1468,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @UseSlot3.started += instance.OnUseSlot3;
             @UseSlot3.performed += instance.OnUseSlot3;
             @UseSlot3.canceled += instance.OnUseSlot3;
+            @UseSlot4.started += instance.OnUseSlot4;
+            @UseSlot4.performed += instance.OnUseSlot4;
+            @UseSlot4.canceled += instance.OnUseSlot4;
         }
 
         /// <summary>
@@ -1489,6 +1518,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @UseSlot3.started -= instance.OnUseSlot3;
             @UseSlot3.performed -= instance.OnUseSlot3;
             @UseSlot3.canceled -= instance.OnUseSlot3;
+            @UseSlot4.started -= instance.OnUseSlot4;
+            @UseSlot4.performed -= instance.OnUseSlot4;
+            @UseSlot4.canceled -= instance.OnUseSlot4;
         }
 
         /// <summary>
@@ -1873,6 +1905,13 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnUseSlot3(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "UseSlot4" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnUseSlot4(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

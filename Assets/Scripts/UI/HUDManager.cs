@@ -12,8 +12,8 @@ public class HUDManager : MonoBehaviour
         public Sprite sprite;
     }
 
-    [Header("Inventory Slots (0=Jump, 1=Invul, 2=ScoreMult)")]
-    [SerializeField] private InventorySlot[] slots = new InventorySlot[3];
+    [Header("Inventory Slots (0=Jump, 1=Invul, 2=ScoreMult, 3=Launch)")]
+    [SerializeField] private InventorySlot[] slots = new InventorySlot[4];
 
     [Header("Health Bar")]
     [SerializeField] private Slider healthSlider;
