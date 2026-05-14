@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     public event System.Action OnBossThreshold;
     public event System.Action OnBossDefeated;
     private bool bossThresholdFired = false;
-    private const float BossScoreThreshold = 100f;
+    private const float BossScoreThreshold = 50f;
 
     private void Awake()
     {

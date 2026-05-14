@@ -2973,7 +2973,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
   scoreText: {fileID: 1944489244}
-  gameOverPanel: {fileID: 0}
+  gameOverPanel: {fileID: 1595559110}
   finalScoreText: {fileID: 66274372}
   bossWarningText: {fileID: 0}
   warningDuration: 2

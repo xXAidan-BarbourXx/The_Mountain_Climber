@@ -35,7 +35,6 @@ public class BossController : MonoBehaviour
 
     private Queue<(float time, float x)> xHistory = new Queue<(float, float)>();
 
-    // FIX: was HashSet<float> but keys were strings — now correctly HashSet<string>
     private HashSet<string> triggeredZThresholds = new HashSet<string>();
     private float lastPlatformOriginZ = float.MaxValue;
 
@@ -60,7 +59,6 @@ public class BossController : MonoBehaviour
 
         if (GameManager.Instance != null && GameManager.Instance.IsGameOver) return;
 
-        // Wait until the player is within activation range before doing anything
         if (!activated)
         {
             if (player == null) return;
@@ -68,7 +66,6 @@ public class BossController : MonoBehaviour
             activated = true;
         }
 
-        // Mirror player X with delay
         if (player != null)
         {
             xHistory.Enqueue((Time.time, player.position.x));
@@ -80,7 +77,6 @@ public class BossController : MonoBehaviour
             transform.position = new Vector3(delayedX, transform.position.y, transform.position.z);
         }
 
-        // Count down boss timer
         timer -= Time.deltaTime;
         if (timer <= 0f && !defeatStarted)
         {
@@ -92,13 +88,8 @@ public class BossController : MonoBehaviour
         CheckAndSpawnFallObs();
     }
 
-    /// <summary>
-    /// Called by PlatformManager each time a new boss-fight platform spawns,
-    /// so the boss knows which Z thresholds to watch for.
-    /// </summary>
     public void NotifyPlatformOriginZ(float worldZ)
     {
-        // Only reset thresholds when we've moved to a genuinely new platform
         if (Mathf.Abs(worldZ - lastPlatformOriginZ) > 5f)
         {
             lastPlatformOriginZ = worldZ;
@@ -106,10 +97,6 @@ public class BossController : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Called by a powerup when the boss collides with it.
-    /// Despawns the powerup and adds bonus time to the boss timer.
-    /// </summary>
     public void OnPowerUpAbsorbed()
     {
         timer += powerUpTimeBonus;
@@ -123,7 +110,6 @@ public class BossController : MonoBehaviour
         foreach (float zOff in obstacleZOffsets)
         {
             float thresholdZ = lastPlatformOriginZ + zOff;
-            // FIX: key is now a string, matching HashSet<string>
             string key = thresholdZ.ToString("F1");
 
             if (!triggeredZThresholds.Contains(key) && transform.position.z >= thresholdZ)
@@ -136,7 +122,7 @@ public class BossController : MonoBehaviour
 
     private void SpawnFallObsAtThreshold(float worldZ)
     {
-        int count = Random.Range(1, 3); // 1 or 2
+        int count = Random.Range(1, 3);
         List<int> availableLanes = new List<int> { 0, 1, 2 };
         ShuffleList(availableLanes);
 
