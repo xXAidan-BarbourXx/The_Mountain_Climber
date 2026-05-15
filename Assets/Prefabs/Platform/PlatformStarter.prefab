@@ -410,6 +410,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cliff_face 1
       objectReference: {fileID: 0}
+    - target: {fileID: 357799166524970736, guid: 5322ee8b4ab3ca1429ec8765c1f938e5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1134054841360223306, guid: 5322ee8b4ab3ca1429ec8765c1f938e5, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.11
@@ -420,15 +424,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1134054841360223306, guid: 5322ee8b4ab3ca1429ec8765c1f938e5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.50000006
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1134054841360223306, guid: 5322ee8b4ab3ca1429ec8765c1f938e5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.28056
+      value: -6.9
       objectReference: {fileID: 0}
     - target: {fileID: 1134054841360223306, guid: 5322ee8b4ab3ca1429ec8765c1f938e5, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.23898701
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1134054841360223306, guid: 5322ee8b4ab3ca1429ec8765c1f938e5, type: 3}
       propertyPath: m_LocalRotation.w
