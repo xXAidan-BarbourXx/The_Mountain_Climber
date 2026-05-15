@@ -4,8 +4,6 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    public static PlayerController Instance { get; private set; }
-
     PlayerInputActions playerInput;
     [SerializeField] private float speed;
     [SerializeField] private float jumpSpeed;
@@ -37,8 +35,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float airCrouchDropForce = 20f;
 
     [Header("O2 Input Delay")]
-    [SerializeField] private float maxInputDelay = 0.5f;
-    [SerializeField] private PlayerHealth playerHealth;
+    [SerializeField] private float maxInputDelay = 0.5f;    // delay at 1% O2
+    [SerializeField] private PlayerHealth playerHealth;     // assign in Inspector
 
     [Header("Power-Up State")]
     private bool isInvulnerable = false;
@@ -69,32 +67,40 @@ public class PlayerController : MonoBehaviour
     private Vector3 originalCapsuleCenter;
     private Vector3 originalScale;
 
-    public Vector3 RigidbodyPosition => rb.position;
-
     private Coroutine crouchCoroutine;
+
+    // -------------------------------------------------------------------
+    // O2 Input Queue
+    // Inputs are stamped with a fireAt time and stored in a fixed circular
+    // buffer. DrainInputQueue() is called from Update() every frame.
+    // No coroutines, no allocations at any O2 level after startup.
+    // -------------------------------------------------------------------
 
     private struct PendingInput
     {
-        public float fireAt;
-        public byte type;
-        public Vector2 moveValue;
+        public float fireAt;      // Time.time when this action should execute
+        public byte type;        // 0=jump  1=move  2=crouch
+        public Vector2 moveValue;   // only meaningful when type==1
     }
 
     private const int QUEUE_CAPACITY = 16;
     private PendingInput[] inputQueue = new PendingInput[QUEUE_CAPACITY];
     private int queueHead = 0;
     private int queueCount = 0;
+
+    // Delay in seconds at the current O2 level.
+    // 100% O2 -> 0s   |   1% O2 -> ~0.495s
     private float InputDelay =>
         playerHealth == null ? 0f : (1f - playerHealth.HPPercent) * maxInputDelay;
 
     private void EnqueueInput(byte type, Vector2 moveValue = default)
     {
-        if (queueCount >= QUEUE_CAPACITY) return;
+        if (queueCount >= QUEUE_CAPACITY) return;   // full — drop newest input
 
         int tail = (queueHead + queueCount) % QUEUE_CAPACITY;
         inputQueue[tail] = new PendingInput
         {
-            fireAt = Time.time + InputDelay,
+            fireAt = Time.time + InputDelay,     // snapshot delay at press time
             type = type,
             moveValue = moveValue
         };
@@ -106,7 +112,7 @@ public class PlayerController : MonoBehaviour
         while (queueCount > 0)
         {
             ref PendingInput next = ref inputQueue[queueHead];
-            if (Time.time < next.fireAt) break;
+            if (Time.time < next.fireAt) break;     // queue is time-ordered so we can stop here
 
             switch (next.type)
             {
@@ -120,10 +126,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // -------------------------------------------------------------------
+
     private void Awake()
     {
-        Instance = this;
-
         rb = GetComponent<Rigidbody>();
         playerInput = new PlayerInputActions();
 
@@ -166,6 +172,7 @@ public class PlayerController : MonoBehaviour
         playerInput.Disable();
     }
 
+    // Input callbacks — only enqueue, never execute directly
     private void OnJump(InputAction.CallbackContext ctx)
     {
         if (isDead) return;
@@ -175,6 +182,7 @@ public class PlayerController : MonoBehaviour
     private void OnMove(InputAction.CallbackContext ctx)
     {
         if (isDead) return;
+        // Snapshot input value immediately — context is invalid after this frame
         EnqueueInput(1, ctx.ReadValue<Vector2>());
     }
 
@@ -184,6 +192,7 @@ public class PlayerController : MonoBehaviour
         EnqueueInput(2);
     }
 
+    // Execute methods — called by DrainInputQueue when the fireAt time arrives
     private void ExecuteJump()
     {
         if (isLaunched) return;
@@ -396,9 +405,11 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        // Drain the O2 input queue every frame
         if (!isDead)
             DrainInputQueue();
 
+        // Death fall
         if (!isDead) return;
         if (deathFallTimer < deathPauseDuration)
         {
