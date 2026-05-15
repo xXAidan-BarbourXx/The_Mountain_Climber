@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class BossController : MonoBehaviour
 {
-    [Header("References")]
-    [SerializeField] private Transform player;
-
     [Header("FallObs")]
     [SerializeField] private GameObject fallObsPrefab;
 
@@ -42,16 +39,6 @@ public class BossController : MonoBehaviour
 
     private void Awake()
     {
-        if (player == null)
-        {
-            GameObject p = GameObject.FindGameObjectWithTag("Player");
-            if (p != null)
-                player = p.transform;
-            else
-                Debug.LogError("[Boss] Could not find a GameObject tagged 'Player'. " +
-                               "Make sure the Player prefab is tagged correctly.");
-        }
-
         transform.rotation = Quaternion.Euler(90f, 0f, 0f);
 
         Rigidbody rb = GetComponent<Rigidbody>();
@@ -60,6 +47,14 @@ public class BossController : MonoBehaviour
             rb.isKinematic = true;
             rb.freezeRotation = true;
         }
+
+        timer = bossDuration;
+    }
+
+    private void Start()
+    {
+        if (PlayerController.Instance == null)
+            Debug.LogError("[Boss] PlayerController.Instance is null in Start.");
 
         timer = bossDuration;
     }
@@ -73,18 +68,18 @@ public class BossController : MonoBehaviour
         }
 
         if (GameManager.Instance != null && GameManager.Instance.IsGameOver) return;
+        if (PlayerController.Instance == null) return;
 
-        if (player == null)
-        {
-            GameObject p = GameObject.FindGameObjectWithTag("Player");
-            if (p != null) player = p.transform;
-            else return;
-        }
+        Vector3 playerPos = PlayerController.Instance.RigidbodyPosition;
 
         if (!activated)
         {
-            float distZ = Mathf.Abs(transform.position.z - player.position.z);
-            if (distZ > activationRange) return;
+            float distZ = Mathf.Abs(transform.position.z - playerPos.z);
+            if (distZ > activationRange)
+            {
+                Debug.Log($"[Boss] Waiting to activate — player Z: {playerPos.z}, boss Z: {transform.position.z}, distZ: {distZ}");
+                return;
+            }
 
             activated = true;
             Debug.Log("[Boss] Activated — beginning flee sequence.");
@@ -92,7 +87,7 @@ public class BossController : MonoBehaviour
 
         transform.position += Vector3.forward * (playerSpeed * Time.deltaTime);
 
-        xHistory.Enqueue((Time.time, player.position.x));
+        xHistory.Enqueue((Time.time, playerPos.x));
         while (xHistory.Count > 1 && xHistory.Peek().time < Time.time - xFollowDelay)
             xHistory.Dequeue();
 
@@ -121,17 +116,19 @@ public class BossController : MonoBehaviour
 
     private void UpdatePlatformOriginFallback()
     {
-        if (player == null) return;
+        if (PlayerController.Instance == null) return;
+
+        Vector3 playerPos = PlayerController.Instance.RigidbodyPosition;
 
         if (lastPlatformOriginZ == float.MaxValue)
         {
-            lastPlatformOriginZ = player.position.z;
+            lastPlatformOriginZ = playerPos.z;
             return;
         }
 
-        if (player.position.z > lastPlatformOriginZ + 60f)
+        if (playerPos.z > lastPlatformOriginZ + 60f)
         {
-            lastPlatformOriginZ = player.position.z;
+            lastPlatformOriginZ = playerPos.z;
             triggeredZThresholds.Clear();
         }
     }

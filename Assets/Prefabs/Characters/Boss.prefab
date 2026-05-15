@@ -140,7 +140,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
@@ -157,6 +157,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossController
   player: {fileID: 7709822338965516504, guid: 125bf49bb53eb98488d1b9793f3c51aa, type: 3}
+  boss: {fileID: 7709822338965516504}
   fallObsPrefab: {fileID: 6072938864621587903, guid: 340ec6fa217c9b740b84dabbe5e7cc92, type: 3}
   obstacleZOffsets:
   - 20
