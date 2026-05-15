@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6675988558536926369}
   m_Layer: 6
   m_Name: PowerUp_ScoreMultiplier
-  m_TagString: Untagged
+  m_TagString: PowerUp
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -129,3 +129,7 @@ MonoBehaviour:
   duration: 5
   jumpMultiplier: 1.5
   scoreMultiplier: 2
+  launchUpwardForce: 5
+  launchSpeedMultiplier: 3
+  launchCollisionGracePeriod: 1
+  oxygenRefillPercent: 0.15

@@ -109,7 +109,7 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -140,7 +140,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
@@ -170,6 +170,8 @@ MonoBehaviour:
   xFollowDelay: 0.5
   bossDuration: 30
   powerUpTimeBonus: 5
+  activationRange: 40
+  playerSpeed: 10
   fallSpeed: 9.81
 --- !u!1 &1601141683121435885
 GameObject:
